@@ -61,10 +61,13 @@ def log_event(card, action, result, reason=""):
 # 3) implement authorize() and pay_simulation() below...
 def authorize(card_id, door_id):
     if card_id not in cards:
+        # log_event(card_id, "access", "allowed"/"denied", reason_code)
         return False, "Denied, Unknown Card. "
     
     card = cards[card_id]
-
+    if card["status"] != "active":
+        return False, "Denied, Card Inactive. "
+    
     print(card["status"])
     return True, "Access Granted, Card Recognised. "
 
