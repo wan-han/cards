@@ -57,7 +57,7 @@
   {
     "card_id": "A003",
     "holder": "James Jackle",
-    "role": "User",
+    "role": "user",
     "status": "Inactive",
     "allowed_doors": ["door_2"],
     "payment": {

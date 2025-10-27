@@ -35,8 +35,9 @@ with open(CARDS_FILE) as f:
 # 2) simple policy
 POLICY = {
     "door_1": ["admin","staff"],
+    "door_2": ["admin", "staff", "client", "guest"]
     "lab_2": ["admin"],
-    "lobby": ["admin","staff","guest"]
+    "lobby": ["admin","staff","user"]
 }
 
 def ensure_log():
@@ -67,7 +68,7 @@ def authorize(card_id, door_id):
     card = cards[card_id]
     if card["status"] != "active":
         return False, "Denied, Card Inactive. "
-    
+
     print(card["status"])
     return True, "Access Granted, Card Recognised. "
 
