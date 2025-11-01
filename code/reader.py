@@ -1,12 +1,16 @@
 # reader.py (start)
-import json, csv, os
+import json
+import csv
+import os
 from datetime import datetime
 
 BASE_DIR = os.path.dirname(__file__)
 
 CANDIDATES = [
-    "cards.json",                           # same folder
-    os.path.join("cardData", "cards.json"), # ./cardData/cards.json
+    "cards.json",
+    os.path.join("cards", "code", "cardData", "cards.json"),
+    os.path.join("cards", "code", "cards.json"),
+    os.path.join("cardData", "cards.json"),
     os.path.join("..", "cardData", "cards.json"),
     os.path.join("..", "cards.json"),
 ]
@@ -18,13 +22,10 @@ for rel in CANDIDATES:
         CARDS_FILE = candidate
         break
 else:
-    raise FileNotFoundError(
-        f"cards.json not found; tried {CANDIDATES} from {BASE_DIR}"
-    )
+    raise FileNotFoundError(f"cards.json not found; tried {CANDIDATES} from {BASE_DIR}")
 
-print("Loading cards from:", CARDS_FILE)  # debug; remove later
+print("Loading cards from:", CARDS_FILE)
 
-# CARDS_FILE = "cards.json"
 EVENTS_FILE = "events.csv"
 DOOR_ID = "door_1"
 
@@ -35,9 +36,8 @@ with open(CARDS_FILE) as f:
 # 2) simple policy
 POLICY = {
     "door_1": ["admin","staff"],
-    "door_2": ["admin", "staff", "client", "guest"]
     "lab_2": ["admin"],
-    "lobby": ["admin","staff","user"]
+    "lobby": ["admin","staff","guest"]
 }
 
 def ensure_log():
@@ -62,15 +62,11 @@ def log_event(card, action, result, reason=""):
 # 3) implement authorize() and pay_simulation() below...
 def authorize(card_id, door_id):
     if card_id not in cards:
-        # log_event(card_id, "access", "allowed"/"denied", reason_code)
-        return False, "Denied, Unknown Card. "
-    
-    card = cards[card_id]
-    if card["status"] != "active":
-        return False, "Denied, Card Inactive. "
+        return False, "Denied: Unknown Card. "
 
-    print(card["status"])
-    return True, "Access Granted, Card Recognised. "
+    card = cards[card_id]
+    print(card.get("status"))
+    return True, "Access Granted"
 
 
 if __name__ == "__main__":
