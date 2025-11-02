@@ -1,8 +1,7 @@
-# reader.py (start)
 import json
 import csv
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 BASE_DIR = os.path.dirname(__file__)
 
@@ -29,15 +28,23 @@ print("Loading cards from:", CARDS_FILE)
 EVENTS_FILE = "events.csv"
 DOOR_ID = "door_1"
 
-# 1) load cards into dict
-with open(CARDS_FILE) as f:
-    cards = {c["card_id"]: c for c in json.load(f)}
+def load_cards():
+    """Load cards.json and return {card_id: card_dict}."""
+    with open(CARDS_FILE, "r") as f:
+        data = json.load(f)
+    # expect a list like [ {...}, {...} ]
+    cards_dict = {c["card_id"]: c for c in data}
+    print(f"loaded {len(cards_dict)} cards")
+    return cards_dict
+
+# load once at startup
+cards = load_cards()
 
 # 2) simple policy
 POLICY = {
-    "door_1": ["admin","staff"],
+    "door_1": ["admin", "staff"],
     "lab_2": ["admin"],
-    "lobby": ["admin","staff","guest"]
+    "lobby": ["admin", "staff", "guest"],
 }
 
 def ensure_log():
@@ -51,7 +58,7 @@ def log_event(card, action, result, reason=""):
     with open(EVENTS_FILE, "a", newline="") as f:
         out = csv.writer(f)
         out.writerow([
-            datetime.utcnow().isoformat(), DOOR_ID,
+            datetime.now(timezone.utc).isoformat(), DOOR_ID,
             card.get("card_id","-"),
             card.get("holder","-"),
             card.get("role","-"),
@@ -59,18 +66,17 @@ def log_event(card, action, result, reason=""):
             action, result, reason
         ])
 
-# 3) implement authorize() and pay_simulation() below...
 def authorize(card_id, door_id):
     if card_id not in cards:
-        return False, "Denied: Unknown Card. "
+        return False, "Denied: Unknown Card."
 
     card = cards[card_id]
     print(card.get("status"))
     return True, "Access Granted"
 
-
 if __name__ == "__main__":
-    # manually test the authorize function
-    test_id = input("Enter card ID to test: ").strip()
-    ok, msg = authorize(test_id, DOOR_ID)
-    print("Result:", ok, "| Message:", msg)
+    while True:
+        print("Enter card ID to test: ")
+        test_id = input("> ").strip()
+        ok, msg = authorize(test_id, DOOR_ID)
+        print("Result:", ok, "| Message:", msg)
