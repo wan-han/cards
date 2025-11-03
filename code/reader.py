@@ -52,8 +52,6 @@ POLICY = {
     "lobby": ["admin", "staff", "guest", "user"],
 }
 
-# DOOR_ID will be chosen per-iteration in the interactive loop below
-
 
 def ensure_log():
     if not os.path.exists(EVENTS_FILE) or os.stat(EVENTS_FILE).st_size == 0:
@@ -72,6 +70,7 @@ def ensure_log():
                     "reason",
                 ]
             )
+
 
 def log_event(door_id, card, action, result, reason=""):
     ensure_log()
@@ -105,29 +104,45 @@ def authorise(card_id, door_id):
     # 2) status check
     print(card.get("status"))
     if card.get("status") != "active":
-        log_event(door_id, card, "access", "denied", f"Card status is {card.get('status')}")
+        log_event(
+            door_id, card, "access", "denied", f"Card status is {card.get('status')}"
+        )
         return False, f"Denied: Card status is {card.get('status')}."
 
-    # 3) door known?
+    # 3) Unknown door
     if door_id not in POLICY:
         # we can still allow if card explicitly allows it
         allowed_doors = card.get("allowed_doors")
         if not allowed_doors or door_id not in allowed_doors:
-            log_event(door_id, card, "access", "denied", f"door '{door_id}' not recognized")
+            log_event(
+                door_id, card, "access", "denied", f"door '{door_id}' not recognized"
+            )
             return False, f"Denied: door '{door_id}' not recognized."
 
     # 4) card-specific allowed_doors wins
     allowed_doors = card.get("allowed_doors")
     if allowed_doors is not None:
         if door_id not in allowed_doors:
-            log_event(door_id, card, "access", "denied", f"door '{door_id}' not in card allowed doors")
+            log_event(
+                door_id,
+                card,
+                "access",
+                "denied",
+                f"door '{door_id}' not in card allowed doors",
+            )
             return False, "Denied: door not in card allowed doors."
 
     # 5) role-based fallback
     role = card.get("role")
     permitted_roles = POLICY.get(door_id, [])
     if role not in permitted_roles:
-        log_event(door_id, card, "access", "denied", f"role '{role}' not permitted for {door_id}")
+        log_event(
+            door_id,
+            card,
+            "access",
+            "denied",
+            f"role '{role}' not permitted for {door_id}",
+        )
         return False, f"Denied: role '{role}' not permitted for {door_id}."
 
     # 6) success
