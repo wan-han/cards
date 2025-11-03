@@ -43,8 +43,10 @@ cards = load_cards()
 # 2) simple policy
 POLICY = {
     "door_1": ["admin", "staff"],
+    "door_2": ["staff"],
+    "door_3": ["admin", "user", "staff"],
     "lab_2": ["admin"],
-    "lobby": ["admin", "staff", "guest"],
+    "lobby": ["admin", "staff", "guest", "user"],
 }
 
 def ensure_log():
@@ -67,7 +69,7 @@ def log_event(door_id, card, action, result, reason=""):
             action, result, reason
         ])
 
-def authorize(card_id, door_id):
+def authorise(card_id, door_id):
     # 1) unknown card
     card = cards.get(card_id)
     if not card:
@@ -79,13 +81,23 @@ def authorize(card_id, door_id):
         return False, f"Denied: Card status is {card.get('status')}."
 
     # 3) door known?
-
+    if door_id not in POLICY:
+        # we can still allow if card explicitly allows it
+        allowed_doors = card.get("allowed_doors")
+        if not allowed_doors or door_id not in allowed_doors:
+            return False, f"Denied: door '{door_id}' not recognized."
 
     # 4) card-specific allowed_doors wins
-
+    allowed_doors = card.get("allowed_doors")
+    if allowed_doors is not None:
+        if door_id not in allowed_doors:
+            return False, "Denied: door not in card allowed doors."
 
     # 5) role-based fallback
-
+    role = card.get("role")
+    permitted_roles = POLICY.get(door_id, [])
+    if role not in permitted_roles:
+        return False, f"Denied: role '{role}' not permitted for {door_id}."
 
     # 6) success
     log_event(door_id, card, "access", "allowed", "ok")
@@ -97,5 +109,5 @@ if __name__ == "__main__":
     while True:
         print("Enter card ID to test: ")
         test_id = input("> ").strip()
-        ok, msg = authorize(test_id, DOOR_ID)
+        ok, msg = authorise(test_id, DOOR_ID)
         print("Result:", ok, "| Message:", msg)
