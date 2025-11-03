@@ -72,6 +72,8 @@ def authorize(card_id, door_id):
 
     card = cards[card_id]
     print(card.get("status"))
+    if card.get("status") != "active":
+        return False, f"Denied: Card status is {card.get('status')}."
     return True, "Access Granted"
 
 if __name__ == "__main__":
@@ -80,3 +82,4 @@ if __name__ == "__main__":
         test_id = input("> ").strip()
         ok, msg = authorize(test_id, DOOR_ID)
         print("Result:", ok, "| Message:", msg)
+        log_event(cards.get(test_id, {"card_id": test_id}), "test_authorize", "granted" if ok else "denied", msg)

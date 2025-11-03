@@ -1,2 +1,6 @@
 ts,door,card,holder,role,status,action,result,reason
 2025-11-01T20:01:12.484509,door_1,a002,-,-,-,access,denied,unknown_card
+2025-11-02T12:20:27.708277+00:00,door_1,A001,Han Dhunna,admin,active,access,allowed,ok
+2025-11-03T12:01:26.466767+00:00,door_1,A001,Han Dhunna,admin,active,test_authorize,granted,Access Granted
+2025-11-03T12:01:34.335783+00:00,door_1,A002,Alex Rivera,staff,active,test_authorize,granted,Access Granted
+2025-11-03T12:01:38.697272+00:00,door_1,A003,James Jackle,user,Inactive,test_authorize,denied,Denied: Card status is Inactive.
