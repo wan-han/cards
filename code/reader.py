@@ -48,17 +48,20 @@ POLICY = {
 }
 
 def ensure_log():
-    if not os.path.exists(EVENTS_FILE):
+    if not os.path.exists(EVENTS_FILE) or os.stat(EVENTS_FILE).st_size == 0:
         with open(EVENTS_FILE, "w", newline="") as f:
             out = csv.writer(f)
             out.writerow(["ts","door","card","holder","role","status","action","result","reason"])
 
-def log_event(card, action, result, reason=""):
+def log_event(door_id, card, action, result, reason=""):
     ensure_log()
+    if card is None:
+        card = {}
     with open(EVENTS_FILE, "a", newline="") as f:
         out = csv.writer(f)
         out.writerow([
             datetime.now(timezone.utc).isoformat(), DOOR_ID,
+            door_id,
             card.get("card_id","-"),
             card.get("holder","-"),
             card.get("role","-"),
@@ -67,10 +70,11 @@ def log_event(card, action, result, reason=""):
         ])
 
 def authorize(card_id, door_id):
-    if card_id not in cards:
-        return False, "Denied: Unknown Card."
+    card = cards.get(card_id)
+    if not card:
+        log_event(door_id, {"card_id": card_id}, "access", "denied", "Access Denied: Unknown Card")
+        return False, "Denied: unknown card."
 
-    card = cards[card_id]
     print(card.get("status"))
     if card.get("status") != "active":
         return False, f"Denied: Card status is {card.get('status')}."
@@ -82,4 +86,3 @@ if __name__ == "__main__":
         test_id = input("> ").strip()
         ok, msg = authorize(test_id, DOOR_ID)
         print("Result:", ok, "| Message:", msg)
-        log_event(cards.get(test_id, {"card_id": test_id}), "test_authorize", "granted" if ok else "denied", msg)
