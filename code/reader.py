@@ -28,6 +28,7 @@ print("Loading cards from:", CARDS_FILE)
 EVENTS_FILE = "events.csv"
 DOOR_ID = "door_1"
 
+
 def load_cards():
     """Load cards.json and return {card_id: card_dict}."""
     with open(CARDS_FILE, "r") as f:
@@ -36,6 +37,7 @@ def load_cards():
     cards_dict = {c["card_id"]: c for c in data}
     print(f"loaded {len(cards_dict)} cards")
     return cards_dict
+
 
 # load once at startup
 cards = load_cards()
@@ -49,25 +51,45 @@ POLICY = {
     "lobby": ["admin", "staff", "guest", "user"],
 }
 
+
 def ensure_log():
     if not os.path.exists(EVENTS_FILE):
         with open(EVENTS_FILE, "w", newline="") as f:
             out = csv.writer(f)
-            out.writerow(["ts","door","card","holder","role","status","action","result","reason"])
+            out.writerow(
+                [
+                    "ts",
+                    "door",
+                    "card",
+                    "holder",
+                    "role",
+                    "status",
+                    "action",
+                    "result",
+                    "reason",
+                ]
+            )
+
 
 def log_event(door_id, card, action, result, reason=""):
     ensure_log()
     with open(EVENTS_FILE, "a", newline="") as f:
         out = csv.writer(f)
-        out.writerow([
-            datetime.now(timezone.utc).isoformat(), DOOR_ID,
-            door_id,
-            card.get("card_id","-"),
-            card.get("holder","-"),
-            card.get("role","-"),
-            card.get("status","-"),
-            action, result, reason
-        ])
+        out.writerow(
+            [
+                datetime.now(timezone.utc).isoformat(),
+                DOOR_ID,
+                door_id,
+                card.get("card_id", "-"),
+                card.get("holder", "-"),
+                card.get("role", "-"),
+                card.get("status", "-"),
+                action,
+                result,
+                reason,
+            ]
+        )
+
 
 def authorise(card_id, door_id):
     # 1) unknown card
@@ -102,7 +124,6 @@ def authorise(card_id, door_id):
     # 6) success
     log_event(door_id, card, "access", "allowed", "ok")
     return True, "Access granted."
-
 
 
 if __name__ == "__main__":
