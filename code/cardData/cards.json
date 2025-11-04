@@ -4,7 +4,13 @@
     "holder": "Han Dhunna",
     "role": "admin",
     "status": "active",
-    "allowed_doors": ["door_1", "lobby", "lab1", "door_3", "door_2"],
+    "allowed_doors": [
+      "door_1",
+      "lobby",
+      "lab1",
+      "door_3",
+      "door_2"
+    ],
     "payment": {
       "wallet_linked": true,
       "wallet_provider": "stripe",
@@ -29,13 +35,16 @@
       "notes": "Tech Ops / combined access & payment"
     }
   },
-
   {
     "card_id": "A002",
     "holder": "Alex Rivera",
     "role": "staff",
     "status": "active",
-    "allowed_doors": ["door_1", "door_2", "lab1"],
+    "allowed_doors": [
+      "door_1",
+      "door_2",
+      "lab1"
+    ],
     "payment": {
       "wallet_linked": false,
       "wallet_provider": null,
@@ -53,13 +62,14 @@
       "notes": "Standard staff card for door_1 only"
     }
   },
-
   {
     "card_id": "A003",
     "holder": "James Jackle",
     "role": "user",
     "status": "Inactive",
-    "allowed_doors": ["door_2"],
+    "allowed_doors": [
+      "door_2"
+    ],
     "payment": {
       "wallet_linked": false,
       "wallet_provider": null,

@@ -27,7 +27,7 @@ else:
 print("Loading cards from:", CARDS_FILE)
 
 EVENTS_FILE = "events.csv"
-DOOR_ID = None  # selected from POLICY below at import time
+DOOR_ID = None
 
 
 def load_cards():
@@ -48,7 +48,7 @@ POLICY = {
     "door_1": ["admin", "staff"],
     "door_2": ["staff"],
     "door_3": ["admin", "user", "staff"],
-    "lab_2": ["admin"],
+    "lab_1": ["admin"],
     "lobby": ["admin", "staff", "guest", "user"],
 }
 
@@ -109,7 +109,7 @@ def authorise(card_id, door_id):
         )
         return False, f"Denied: Card status is {card.get('status')}."
 
-    # 3) Unknown door
+    # 3) door known?
     if door_id not in POLICY:
         # we can still allow if card explicitly allows it
         allowed_doors = card.get("allowed_doors")
@@ -166,3 +166,8 @@ if __name__ == "__main__":
 
         ok, msg = authorise(test_id, DOOR_ID)
         print("Result:", ok, "| Message:", msg)
+        print("Do you wish to test another card? (y/n): ")
+        cont = input("> ").strip().lower()
+        if cont != "y":
+            print("Exiting.")
+            break
