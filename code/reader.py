@@ -185,23 +185,66 @@ def authorise(card_id, door_id):
 
 
 if __name__ == "__main__":
-    while True:
-        # pick a new door for this iteration and set the module-level variable
-        DOOR_ID = random.choice(list(POLICY.keys()))
-        print("Selected DOOR_ID:", DOOR_ID)
+    help_text = (
+        "Commands:\n"
+        "  scan <card_id>   - simulate scanning a card\n"
+        "  door <door_id>   - change current door\n"
+        "  reload           - reload cards.json from disk\n"
+        "  ?                - show this help message\n"
+        "  exit             - quit\n"
+    )
 
-        print("Enter card ID to test: ")
+    while True:
         try:
-            test_id = input("> ").strip()
+            # chooses an initial door for this runtime
+            DOOR_ID = random.choice(list(POLICY.keys()))
+            print("Current random DOOR_ID:", DOOR_ID)
+
+            print(help_text)
+            cmd = input("Enter an action here> ").strip()
         except EOFError:
-            # allow clean exit when stdin is exhausted (useful for tests)
             print("EOF received, exiting")
             break
 
-        ok, msg = authorise(test_id, DOOR_ID)
-        print("Result:", ok, "| Message:", msg)
-        print("Do you wish to test another card? (y/n): ")
+        if not cmd:
+            continue
+
+        parts = cmd.split()
+        action = parts[0].lower()
+
+        if action == "scan":
+            if len(parts) < 2:
+                print("Usage: scan <card_id>")
+                continue
+            card_id = parts[1]
+            ok, msg = authorise(card_id, DOOR_ID)
+            print("Result:", ok, "| Message:", msg)
+
+        elif action == "door":
+            if len(parts) < 2:
+                print("Usage: door <door_id>")
+                continue
+            DOOR_ID = parts[1]
+            print(f"Door set to: {DOOR_ID}")
+
+        elif action == "reload":
+            cards = load_cards()
+            print(f"Reloaded {len(cards)} cards")
+
+        elif action in ("exit", "quit"):
+            print("Exiting")
+            break
+
+        elif action in ("help", "h", "?"):
+            print(help_text)
+
+        else:
+            print("Unknown command. Type 'help' for commands.")
+        print("Do you wish to continue? (y/n): ")
         cont = input("> ").strip().lower()
         if cont != "y":
+            if cont != "n":
+                print("Invalid input, exiting.")
+                break
             print("Exiting.")
             break
