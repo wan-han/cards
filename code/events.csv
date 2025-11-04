@@ -4,3 +4,22 @@ ts,door,card,holder,role,status,action,result,reason
 2025-11-03T12:01:26.466767+00:00,door_1,A001,Han Dhunna,admin,active,test_authorize,granted,Access Granted
 2025-11-03T12:01:34.335783+00:00,door_1,A002,Alex Rivera,staff,active,test_authorize,granted,Access Granted
 2025-11-03T12:01:38.697272+00:00,door_1,A003,James Jackle,user,Inactive,test_authorize,denied,Denied: Card status is Inactive.
+2025-11-03T14:38:26.925044+00:00,lobby,lobby,A001,Han Dhunna,admin,active,access,allowed,ok
+2025-11-03T14:38:28.083382+00:00,lobby,lobby,A002,Alex Rivera,staff,active,access,denied,door 'lobby' not in card allowed doors
+2025-11-03T14:38:29.039773+00:00,lobby,lobby,A003,James Jackle,user,Inactive,access,denied,Card status is Inactive
+2025-11-03T14:38:33.540846+00:00,door_1,door_1,A001,Han Dhunna,admin,active,access,allowed,ok
+2025-11-03T14:38:35.898544+00:00,lab_2,lab_2,A002,Alex Rivera,staff,active,access,denied,door 'lab_2' not in card allowed doors
+2025-11-03T14:38:36.850479+00:00,door_1,door_1,A003,James Jackle,user,Inactive,access,denied,Card status is Inactive
+2025-11-03T14:41:40.165555+00:00,door_2,door_2,A003,James Jackle,user,Inactive,access,denied,Card status is Inactive
+2025-11-03T14:41:42.441222+00:00,door_2,door_2,A001,Han Dhunna,admin,active,access,denied,door 'door_2' not in card allowed doors
+2025-11-03T14:41:43.537762+00:00,door_3,door_3,A001,Han Dhunna,admin,active,access,denied,door 'door_3' not in card allowed doors
+2025-11-03T14:41:44.714400+00:00,door_1,door_1,A001,Han Dhunna,admin,active,access,allowed,ok
+2025-11-03T14:41:48.305453+00:00,lobby,lobby,A001,Han Dhunna,admin,active,access,allowed,ok
+2025-11-03T14:42:58.903543+00:00,door_2,door_2,A002,Alex Rivera,staff,active,access,allowed,ok
+2025-11-03T14:43:01.268293+00:00,door_2,door_2,A001,Han Dhunna,admin,active,access,denied,role 'admin' not permitted for door_2
+2025-11-03T14:44:20.162053+00:00,lobby,lobby,A001,Han Dhunna,admin,active,access,allowed,ok
+2025-11-04T15:00:36.513071+00:00,door_2,door_2,A001,Han Dhunna,admin,active,access,denied,role 'admin' not permitted for door_2
+2025-11-04T15:00:41.729703+00:00,door_2,door_2,A002,Alex Rivera,staff,active,access,allowed,ok
+2025-11-04T15:00:44.797410+00:00,door_1,door_1,A001,Han Dhunna,admin,active,access,allowed,ok
+2025-11-04T15:00:48.442497+00:00,lab_1,lab_1,A001,Han Dhunna,admin,active,access,denied,door 'lab_1' not in card allowed doors
+2025-11-04T15:07:49.328435+00:00,lobby,lobby,A001,-,-,-,access,denied,unknown card

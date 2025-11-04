@@ -22,7 +22,38 @@ for rel in CANDIDATES:
         CARDS_FILE = candidate
         break
 else:
-    raise FileNotFoundError(f"cards.json not found; tried {CANDIDATES} from {BASE_DIR}")
+    # No existing cards.json found in candidates — create a template file
+    target_dir = os.path.normpath(os.path.join(BASE_DIR, "cardData"))
+    os.makedirs(target_dir, exist_ok=True)
+    CARDS_FILE = os.path.join(target_dir, "cards.json")
+
+    template = [
+        {
+            "card_id": "pending",
+            "holder": "pending",
+            "role": "pending",
+            "status": "pending",
+            "allowed_doors": [],
+            "payment": {
+                "wallet_linked": False,
+                "wallet_provider": None,
+                "payment_tokens": [],
+                "daily_offline_limit_gbp": 0,
+            },
+            "biometric": {
+                "fingerprint_enrolled": False,
+                "fingerprint_hash": None,
+                "requires_card_pin": False,
+            },
+            "meta": {"issued_at": None, "issued_by": "pending", "notes": "pending"},
+        }
+    ]
+
+    # write template if missing (don't clobber existing file if race)
+    if not os.path.exists(CARDS_FILE):
+        with open(CARDS_FILE, "w", encoding="utf-8") as f:
+            json.dump(template, f, indent=2)
+        print(f"Created template cards file at: {CARDS_FILE}")
 
 print("Loading cards from:", CARDS_FILE)
 
@@ -31,13 +62,16 @@ DOOR_ID = None
 
 
 def load_cards():
-    """Load cards.json and return {card_id: card_dict}."""
-    with open(CARDS_FILE, "r") as f:
-        data = json.load(f)
-    # expect a list like [ {...}, {...} ]
-    cards_dict = {c["card_id"]: c for c in data}
-    print(f"loaded {len(cards_dict)} cards")
-    return cards_dict
+    if CARDS_FILE is not None:
+        """Load cards.json and return {card_id: card_dict}."""
+        with open(CARDS_FILE, "r") as f:
+            data = json.load(f)
+        # expect a list like [ {...}, {...} ]
+        cards_dict = {c["card_id"]: c for c in data}
+        print(f"loaded {len(cards_dict)} cards")
+        return cards_dict
+    else:
+        raise FileNotFoundError("CARDS_FILE is not set.")
 
 
 # load once at startup
