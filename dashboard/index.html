@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cards Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Cards MVP</p>
+        <h1>Programmable card control</h1>
+      </div>
+      <div class="status-pill" id="api-status">Checking API</div>
+    </header>
+
+    <main class="layout">
+      <section class="panel scan-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Reader test</p>
+            <h2>Simulate a tap</h2>
+          </div>
+        </div>
+
+        <form id="scan-form" class="form-grid">
+          <label>
+            Card
+            <select id="scan-card"></select>
+          </label>
+          <label>
+            Reader
+            <select id="scan-reader"></select>
+          </label>
+          <button type="submit">Run scan</button>
+        </form>
+
+        <div class="scan-result" id="scan-result">
+          Select a card and reader to test the rules engine.
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Cards</p>
+            <h2>Issued cards</h2>
+          </div>
+          <button id="refresh">Refresh</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Card</th>
+                <th>Holder</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Readers</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cards-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel two-column">
+        <div>
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Issue</p>
+              <h2>Add card</h2>
+            </div>
+          </div>
+          <form id="card-form" class="stack-form">
+            <label>
+              Card ID
+              <input id="new-card-id" placeholder="A004" required />
+            </label>
+            <label>
+              Holder
+              <input id="new-card-holder" placeholder="Guest card" required />
+            </label>
+            <label>
+              Role
+              <select id="new-card-role">
+                <option value="admin">admin</option>
+                <option value="staff">staff</option>
+                <option value="user">user</option>
+                <option value="guest">guest</option>
+              </select>
+            </label>
+            <label>
+              Allowed readers
+              <select id="new-card-readers" multiple></select>
+            </label>
+            <button type="submit">Create card</button>
+          </form>
+        </div>
+
+        <div>
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Network</p>
+              <h2>Add reader</h2>
+            </div>
+          </div>
+          <form id="reader-form" class="stack-form">
+            <label>
+              Reader ID
+              <input id="new-reader-id" placeholder="garage" required />
+            </label>
+            <label>
+              Name
+              <input id="new-reader-name" placeholder="Garage Reader" required />
+            </label>
+            <label>
+              Location
+              <input id="new-reader-location" placeholder="House" />
+            </label>
+            <label>
+              Action
+              <select id="new-reader-action">
+                <option value="unlock">unlock</option>
+                <option value="check_in">check_in</option>
+                <option value="trigger_event">trigger_event</option>
+                <option value="deduct_credit">deduct_credit</option>
+              </select>
+            </label>
+            <button type="submit">Create reader</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Readers</p>
+            <h2>Reader network</h2>
+          </div>
+        </div>
+        <div class="reader-grid" id="reader-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Audit</p>
+            <h2>Recent events</h2>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Card</th>
+                <th>Reader</th>
+                <th>Result</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody id="events-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

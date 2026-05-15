@@ -9,6 +9,7 @@ venv/
 
 # Runtime data
 code/events.csv
+data/
 
 # Local/editor files
 .env
@@ -16,4 +17,3 @@ code/events.csv
 .vscode/
 .idea/
 *.log
-

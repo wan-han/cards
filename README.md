@@ -34,21 +34,23 @@ Card B tapped on Event Reader
 -> log event
 ```
 
-## Current Prototype
+## Current MVP
 
-This repository currently contains a Python CLI simulation of the core authorisation logic.
+This repository now contains a small FastAPI backend, SQLite database, and owner dashboard for the core authorisation flow.
 
 It supports:
 
-- card data stored in JSON
+- card data stored in SQLite
+- seeded sample data from JSON
+- reader records and reader-specific actions
 - active and inactive card status checks
-- role-based access policies
-- card-specific door permissions
+- card-specific reader permissions
 - unknown card and unknown reader handling
-- event logging to CSV
-- simple command-line simulation of card scans and reader selection
+- event logging to the database
+- owner dashboard for scans, cards, readers, and audit events
+- legacy command-line simulation in `code/reader.py`
 
-This is not yet connected to physical NFC hardware or a web dashboard. Those are planned next.
+This is not yet connected to physical NFC hardware. That is the next major product step.
 
 ## Architecture
 
@@ -74,15 +76,25 @@ Near-term architecture:
 
 ```text
 .
-├── code/
-│   ├── reader.py              # CLI prototype for card scanning and authorisation
-│   └── cardData/
-│       ├── cards.json         # Sample card database
-│       └── DataInfo.txt       # Card data schema notes
-├── docs/
-│   └── ROADMAP.md             # Product and engineering roadmap
-├── .gitignore
-└── README.md
++-- app/
+|   +-- main.py                # FastAPI app and API routes
+|   +-- database.py            # SQLite schema and seed logic
+|   +-- schemas.py             # Request/response models
++-- dashboard/
+|   +-- index.html             # Owner dashboard
+|   +-- styles.css
+|   +-- app.js
++-- code/
+|   +-- reader.py              # Legacy CLI prototype
+|   +-- events.example.csv
+|   +-- cardData/
+|       +-- cards.json         # Seed card data
+|       +-- DataInfo.txt       # Card data schema notes
++-- docs/
+|   +-- ROADMAP.md             # Product and engineering roadmap
++-- requirements.txt
++-- .gitignore
++-- README.md
 ```
 
 ## Run Locally
@@ -90,18 +102,19 @@ Near-term architecture:
 Requires Python 3.10+.
 
 ```bash
-python code/reader.py
+pip install -r requirements.txt
+uvicorn app.main:app --reload
 ```
 
-Useful commands inside the CLI:
+Then open:
 
 ```text
-scan A001       # simulate tapping card A001
-door door_1     # change the active reader/door
-reload          # reload card data from cards.json
-help            # show commands
-exit            # quit
+http://127.0.0.1:8000
 ```
+
+API docs are available at `http://127.0.0.1:8000/docs`.
+
+The old CLI prototype can still be run with `python code/reader.py`.
 
 ## Example Card Record
 
@@ -125,7 +138,7 @@ exit            # quit
 }
 ```
 
-Payment and biometric fields are included as future-facing data structures. The current prototype only uses card identity, status, role, and door permissions.
+Payment and biometric fields are included as future-facing data structures. The current MVP only uses card identity, status, role, readers, permissions, and events.
 
 ## Product Roadmap
 
@@ -175,7 +188,19 @@ Potential future direction:
 
 This phase would require proper fintech infrastructure, regulatory review, fraud controls, KYC/AML, and payment network partnerships. It is intentionally not the first build target.
 
+## API Surface
+
+Current endpoints:
+
+- `POST /scan`
+- `GET /cards`
+- `POST /cards`
+- `PATCH /cards/{card_id}`
+- `GET /readers`
+- `POST /readers`
+- `GET /events`
+- `GET /health`
+
 ## Status
 
-Early prototype. The core access-control logic exists as a CLI simulation. The next serious step is to turn this into a backend API with a database and connect it to a physical NFC reader.
-
+Early MVP. The core access-control loop now works through an API, database, and dashboard. The next serious step is to connect a real NFC reader device to `POST /scan`.
