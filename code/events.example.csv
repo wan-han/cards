@@ -1,0 +1,2 @@
+ts,reader_id,door_id,card,holder,role,status,action,result,reason
+2026-01-01T12:00:00+00:00,door_1,door_1,A001,Han Dhunna,admin,active,access,allowed,ok
