@@ -9,7 +9,7 @@
   --line-dark: rgba(255, 255, 255, 0.13);
   --black: #080809;
   --graphite: #191a1c;
-  --red: #c5162e;
+  --red: #d5001c;
   --red-soft: #f7e1e4;
   --green: #13724b;
   --green-soft: #ddf0e6;
@@ -21,6 +21,11 @@
 
 * {
   box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: hidden;
 }
 
 body {
@@ -75,6 +80,22 @@ button.secondary:hover {
   color: white;
 }
 
+.nav-menu {
+  min-height: 36px;
+  border: 0;
+  background: transparent;
+  color: #c7c7c7;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 0;
+}
+
+.nav-menu:hover {
+  background: transparent;
+  color: white;
+  transform: none;
+}
+
 h1,
 h2,
 p {
@@ -117,6 +138,7 @@ h2 {
 }
 
 .nav {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -125,40 +147,100 @@ h2 {
 }
 
 .brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   color: var(--cream);
-  font-size: 15px;
+  font-size: clamp(22px, 3vw, 34px);
   font-weight: 900;
-}
-
-.brand-mark {
-  display: inline-grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
-  border: 1px solid var(--line-dark);
-  border-radius: 4px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)),
-    #151617;
-  color: var(--metal);
+  letter-spacing: 6px;
 }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 390px;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 470px);
   gap: 40px;
   align-items: end;
+  min-width: 0;
 }
 
 .hero-subline {
-  max-width: 620px;
+  max-width: min(620px, 100%);
   margin-top: 20px;
   color: #bcb7ac;
   font-size: 17px;
   line-height: 1.45;
+}
+
+.hero-copy {
+  min-width: 0;
+}
+
+.hero-system {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.access-card {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 238px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 80% 18%, rgba(255, 255, 255, 0.16), transparent 22%),
+    linear-gradient(145deg, #2c2e31, #070708 70%);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+  padding: 28px;
+}
+
+.access-card::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  bottom: -110px;
+  width: 260px;
+  height: 260px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.card-chip {
+  width: 48px;
+  height: 36px;
+  border: 1px solid rgba(255, 247, 232, 0.38);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #d0bd8d, #776a4f);
+}
+
+.card-line {
+  width: 96px;
+  height: 3px;
+  margin-top: 52px;
+  background: var(--red);
+}
+
+.card-wordmark {
+  position: absolute;
+  left: 28px;
+  bottom: 42px;
+  color: var(--cream);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 5px;
+}
+
+.card-status {
+  position: absolute;
+  right: 28px;
+  bottom: 28px;
+  color: #9d9587;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0;
 }
 
 .status-pill,
@@ -200,13 +282,13 @@ h2 {
 }
 
 .metric {
-  min-height: 98px;
+  min-height: 86px;
   border: 1px solid var(--line-dark);
-  border-radius: 4px;
+  border-radius: 10px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-    var(--graphite);
-  padding: 18px;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.04)),
+    #161719;
+  padding: 16px;
 }
 
 .metric span {
@@ -235,7 +317,7 @@ h2 {
 
 .panel {
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 12px;
   background: var(--surface);
   box-shadow: var(--shadow);
   padding: 22px;
@@ -251,7 +333,7 @@ h2 {
   position: absolute;
   inset: 0 0 auto;
   height: 4px;
-  background: var(--red);
+  background: linear-gradient(90deg, var(--red), #ff5a66);
 }
 
 .compact-panel {
@@ -286,7 +368,7 @@ input {
   width: 100%;
   min-height: 44px;
   border: 1px solid #cfc7bc;
-  border-radius: 4px;
+  border-radius: 8px;
   background: #fff;
   color: var(--ink);
   outline: none;
@@ -310,7 +392,7 @@ select[multiple] {
   align-items: center;
   margin-top: 14px;
   border: 1px solid #d9d1c5;
-  border-radius: 4px;
+  border-radius: 8px;
   background: var(--surface-2);
   color: var(--muted);
   font-size: 14px;
@@ -384,7 +466,7 @@ tbody tr:hover td {
   min-height: 158px;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: 12px;
   background:
     linear-gradient(180deg, #fff, #f3efe7);
   padding: 17px;
@@ -450,6 +532,36 @@ tbody tr:hover td {
 
   .nav {
     margin-bottom: 34px;
+  }
+
+  .brand {
+    font-size: 21px;
+    letter-spacing: 4px;
+  }
+
+  .nav-menu {
+    font-size: 0;
+  }
+
+  .nav-menu::before {
+    content: "Menu";
+    font-size: 14px;
+  }
+
+  .hero-grid {
+    gap: 28px;
+  }
+
+  .access-card {
+    min-height: 210px;
+  }
+
+  .card-status {
+    display: none;
+  }
+
+  .hero-subline {
+    max-width: 30ch;
   }
 
   .form-grid,

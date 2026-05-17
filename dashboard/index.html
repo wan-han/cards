@@ -9,10 +9,8 @@
   <body>
     <header class="hero">
       <nav class="nav">
-        <div class="brand">
-          <span class="brand-mark">C</span>
-          <span>Cards</span>
-        </div>
+        <button class="nav-menu" type="button">Menu</button>
+        <div class="brand">CARDS</div>
         <div class="status-pill" id="api-status">Checking API</div>
       </nav>
 
@@ -23,22 +21,31 @@
           <p class="hero-subline">Issue cards, authorise readers, and review every tap in real time.</p>
         </div>
 
-        <div class="metric-strip" aria-label="System summary">
-          <div class="metric">
-            <span id="metric-cards">0</span>
-            <small>Cards</small>
+        <div class="hero-system">
+          <div class="access-card" aria-hidden="true">
+            <div class="card-chip"></div>
+            <div class="card-line"></div>
+            <div class="card-wordmark">CARDS</div>
+            <div class="card-status">NFC ACCESS</div>
           </div>
-          <div class="metric">
-            <span id="metric-readers">0</span>
-            <small>Readers</small>
-          </div>
-          <div class="metric">
-            <span id="metric-events">0</span>
-            <small>Events</small>
-          </div>
-          <div class="metric">
-            <span id="metric-active">0</span>
-            <small>Active</small>
+
+          <div class="metric-strip" aria-label="System summary">
+            <div class="metric">
+              <span id="metric-cards">0</span>
+              <small>Cards</small>
+            </div>
+            <div class="metric">
+              <span id="metric-readers">0</span>
+              <small>Readers</small>
+            </div>
+            <div class="metric">
+              <span id="metric-events">0</span>
+              <small>Events</small>
+            </div>
+            <div class="metric">
+              <span id="metric-active">0</span>
+              <small>Active</small>
+            </div>
           </div>
         </div>
       </div>
