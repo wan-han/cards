@@ -81,6 +81,15 @@ function renderCards() {
     .join("");
 }
 
+function renderMetrics(events = []) {
+  document.querySelector("#metric-cards").textContent = state.cards.length;
+  document.querySelector("#metric-readers").textContent = state.readers.length;
+  document.querySelector("#metric-events").textContent = events.length;
+  document.querySelector("#metric-active").textContent = state.cards.filter(
+    (card) => card.status === "active",
+  ).length;
+}
+
 function renderReaders() {
   const grid = document.querySelector("#reader-grid");
   grid.innerHTML = state.readers
@@ -99,6 +108,7 @@ function renderReaders() {
 
 async function renderEvents() {
   const events = await api.get("/events");
+  renderMetrics(events);
   const body = document.querySelector("#events-body");
   body.innerHTML =
     events
@@ -145,7 +155,7 @@ document.querySelector("#scan-form").addEventListener("submit", async (event) =>
 
   const result = await api.post("/scan", payload);
   resultBox.className = `scan-result ${result.result}`;
-  resultBox.textContent = `${result.result.toUpperCase()}: ${result.action} - ${result.reason}`;
+  resultBox.textContent = `${result.result.toUpperCase()} | ${result.card_id} at ${result.reader_id} | ${result.action} | ${result.reason}`;
   await renderEvents();
 });
 

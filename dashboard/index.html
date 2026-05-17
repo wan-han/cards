@@ -7,20 +7,48 @@
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Cards MVP</p>
-        <h1>Programmable card control</h1>
+    <header class="hero">
+      <nav class="nav">
+        <div class="brand">
+          <span class="brand-mark">C</span>
+          <span>Cards</span>
+        </div>
+        <div class="status-pill" id="api-status">Checking API</div>
+      </nav>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Programmable NFC access</p>
+          <h1>Control every card, reader, and tap from one dashboard.</h1>
+        </div>
+
+        <div class="metric-strip" aria-label="System summary">
+          <div class="metric">
+            <span id="metric-cards">0</span>
+            <small>Cards</small>
+          </div>
+          <div class="metric">
+            <span id="metric-readers">0</span>
+            <small>Readers</small>
+          </div>
+          <div class="metric">
+            <span id="metric-events">0</span>
+            <small>Events</small>
+          </div>
+          <div class="metric">
+            <span id="metric-active">0</span>
+            <small>Active</small>
+          </div>
+        </div>
       </div>
-      <div class="status-pill" id="api-status">Checking API</div>
     </header>
 
     <main class="layout">
-      <section class="panel scan-panel">
+      <section class="panel scan-panel primary-panel">
         <div class="panel-heading">
           <div>
-            <p class="eyebrow">Reader test</p>
-            <h2>Simulate a tap</h2>
+            <p class="eyebrow">Live authorisation</p>
+            <h2>Simulate a card tap</h2>
           </div>
         </div>
 
@@ -33,7 +61,7 @@
             Reader
             <select id="scan-reader"></select>
           </label>
-          <button type="submit">Run scan</button>
+          <button type="submit">Authorise tap</button>
         </form>
 
         <div class="scan-result" id="scan-result">
@@ -41,7 +69,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel table-panel">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">Cards</p>
@@ -66,8 +94,8 @@
         </div>
       </section>
 
-      <section class="panel two-column">
-        <div>
+      <section class="two-column">
+        <div class="panel compact-panel">
           <div class="panel-heading">
             <div>
               <p class="eyebrow">Issue</p>
@@ -100,7 +128,7 @@
           </form>
         </div>
 
-        <div>
+        <div class="panel compact-panel">
           <div class="panel-heading">
             <div>
               <p class="eyebrow">Network</p>
@@ -134,7 +162,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel reader-panel">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">Readers</p>
@@ -144,7 +172,7 @@
         <div class="reader-grid" id="reader-grid"></div>
       </section>
 
-      <section class="panel">
+      <section class="panel table-panel">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">Audit</p>
