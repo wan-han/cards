@@ -116,6 +116,21 @@ API docs are available at `http://127.0.0.1:8000/docs`.
 
 The old CLI prototype can still be run with `python code/reader.py`.
 
+## Mock Reader Client
+
+The mock reader client behaves like a future NFC reader device: it knows its own `reader_id`, accepts card IDs from the terminal, and sends scan requests to the backend.
+
+```bash
+python -m reader_client.mock_reader --reader-id door_1 --api-url http://127.0.0.1:8000
+```
+
+Example:
+
+```text
+card> A001
+ALLOWED | card=A001 | reader=door_1 | action=unlock | reason=ok
+```
+
 ## Example Card Record
 
 ```json
@@ -198,6 +213,7 @@ Current endpoints:
 - `PATCH /cards/{card_id}`
 - `GET /readers`
 - `POST /readers`
+- `PATCH /readers/{reader_id}`
 - `GET /events`
 - `GET /health`
 

@@ -15,7 +15,7 @@ class CardBase(BaseModel):
 
 class CardCreate(CardBase):
     card_id: str = Field(min_length=1)
-    allowed_readers: list[str] = []
+    allowed_readers: list[str] = Field(default_factory=list)
 
 
 class CardUpdate(BaseModel):
@@ -33,7 +33,7 @@ class CardUpdate(BaseModel):
 
 class Card(CardBase):
     card_id: str
-    allowed_readers: list[str] = []
+    allowed_readers: list[str] = Field(default_factory=list)
 
 
 class ReaderBase(BaseModel):
@@ -45,6 +45,13 @@ class ReaderBase(BaseModel):
 
 class ReaderCreate(ReaderBase):
     reader_id: str = Field(min_length=1)
+
+
+class ReaderUpdate(BaseModel):
+    name: str | None = None
+    location: str | None = None
+    action_type: str | None = None
+    status: str | None = None
 
 
 class Reader(ReaderBase):
@@ -75,4 +82,3 @@ class Event(BaseModel):
     action: str
     result: str
     reason: str
-

@@ -44,8 +44,14 @@ function renderSelects() {
   const cardSelect = document.querySelector("#scan-card");
   const readerSelect = document.querySelector("#scan-reader");
   const newCardReaders = document.querySelector("#new-card-readers");
+  const permissionCard = document.querySelector("#permission-card");
+  const permissionReaders = document.querySelector("#permission-readers");
 
   cardSelect.innerHTML = state.cards
+    .map((card) => `<option value="${card.card_id}">${card.card_id} - ${card.holder}</option>`)
+    .join("");
+
+  permissionCard.innerHTML = state.cards
     .map((card) => `<option value="${card.card_id}">${card.card_id} - ${card.holder}</option>`)
     .join("");
 
@@ -53,9 +59,13 @@ function renderSelects() {
     .map((reader) => `<option value="${reader.reader_id}">${reader.name}</option>`)
     .join("");
 
-  newCardReaders.innerHTML = state.readers
+  const readerOptions = state.readers
     .map((reader) => `<option value="${reader.reader_id}">${reader.name}</option>`)
     .join("");
+
+  newCardReaders.innerHTML = readerOptions;
+  permissionReaders.innerHTML = readerOptions;
+  renderPermissionSelection();
 }
 
 function renderCards() {
@@ -94,16 +104,33 @@ function renderReaders() {
   const grid = document.querySelector("#reader-grid");
   grid.innerHTML = state.readers
     .map(
-      (reader) => `
+      (reader) => {
+        const nextStatus = reader.status === "active" ? "inactive" : "active";
+        return `
         <article class="reader-card">
           <strong>${reader.name}</strong>
           <span>${reader.reader_id}</span>
           <span>${reader.location || "No location"}</span>
-          ${badge(reader.action_type, "active")}
+          ${badge(reader.action_type, reader.status)}
+          <button class="secondary" data-reader-toggle="${reader.reader_id}" data-status="${nextStatus}">
+            ${nextStatus === "active" ? "Enable" : "Disable"}
+          </button>
         </article>
-      `,
+      `;
+      },
     )
     .join("");
+}
+
+function renderPermissionSelection() {
+  const cardId = document.querySelector("#permission-card").value;
+  const card = state.cards.find((item) => item.card_id === cardId);
+  const allowedReaders = new Set(card?.allowed_readers || []);
+  const readerOptions = document.querySelectorAll("#permission-readers option");
+
+  readerOptions.forEach((option) => {
+    option.selected = allowedReaders.has(option.value);
+  });
 }
 
 async function renderEvents() {
@@ -166,6 +193,30 @@ document.querySelector("#cards-body").addEventListener("click", async (event) =>
   await api.patch(`/cards/${button.dataset.toggle}`, {
     status: button.dataset.status,
   });
+  await loadDashboard();
+});
+
+document.querySelector("#reader-grid").addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-reader-toggle]");
+  if (!button) return;
+
+  await api.patch(`/readers/${button.dataset.readerToggle}`, {
+    status: button.dataset.status,
+  });
+  await loadDashboard();
+});
+
+document.querySelector("#permission-card").addEventListener("change", renderPermissionSelection);
+
+document.querySelector("#permission-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const cardId = document.querySelector("#permission-card").value;
+  const readerSelect = document.querySelector("#permission-readers");
+  const allowed_readers = Array.from(readerSelect.selectedOptions).map(
+    (option) => option.value,
+  );
+
+  await api.patch(`/cards/${cardId}`, { allowed_readers });
   await loadDashboard();
 });
 

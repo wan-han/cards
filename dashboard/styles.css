@@ -355,6 +355,13 @@ h2 {
   align-items: end;
 }
 
+.permission-grid {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.6fr) minmax(0, 1.4fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
 label {
   display: grid;
   gap: 7px;
@@ -497,6 +504,12 @@ tbody tr:hover td {
 
 .reader-card .badge {
   margin-top: 8px;
+  margin-right: 8px;
+}
+
+.reader-card button {
+  margin-top: 12px;
+  width: 100%;
 }
 
 .two-column {
@@ -565,6 +578,7 @@ tbody tr:hover td {
   }
 
   .form-grid,
+  .permission-grid,
   .two-column,
   .metric-strip,
   .reader-grid {

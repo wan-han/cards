@@ -13,6 +13,7 @@ from .schemas import (
     Event,
     Reader,
     ReaderCreate,
+    ReaderUpdate,
     ScanRequest,
     ScanResponse,
 )
@@ -83,6 +84,20 @@ def get_allowed_readers(conn, card_id):
 
 
 def set_allowed_readers(conn, card_id, allowed_readers):
+    if allowed_readers:
+        placeholders = ", ".join("?" for _ in allowed_readers)
+        rows = conn.execute(
+            f"SELECT reader_id FROM readers WHERE reader_id IN ({placeholders})",
+            allowed_readers,
+        ).fetchall()
+        known_readers = {row["reader_id"] for row in rows}
+        missing_readers = sorted(set(allowed_readers) - known_readers)
+        if missing_readers:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unknown readers: {', '.join(missing_readers)}",
+            )
+
     conn.execute("DELETE FROM card_permissions WHERE card_id = ?", (card_id,))
     conn.executemany(
         """
@@ -199,6 +214,24 @@ def create_reader(payload: ReaderCreate):
             ),
         )
         reader = get_reader_or_404(conn, payload.reader_id)
+        return Reader(**dict(reader))
+
+
+@app.patch("/readers/{reader_id}", response_model=Reader)
+def update_reader(reader_id: str, payload: ReaderUpdate):
+    fields = payload.dict(exclude_unset=True)
+
+    with get_connection() as conn:
+        get_reader_or_404(conn, reader_id)
+
+        if fields:
+            assignments = ", ".join([f"{field} = ?" for field in fields])
+            conn.execute(
+                f"UPDATE readers SET {assignments} WHERE reader_id = ?",
+                [*fields.values(), reader_id],
+            )
+
+        reader = get_reader_or_404(conn, reader_id)
         return Reader(**dict(reader))
 
 
